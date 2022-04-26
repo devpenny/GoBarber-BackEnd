@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
-import User from "../models/User";
+import User from "../infra/typeorm/entities/User";
 import { hash } from "bcryptjs";
+import AppError from "../../../shared/errors/AppError";
 
 interface RequestDTO {
     name: string;
@@ -23,7 +24,7 @@ class CreateUserService {
             where: {email: email}
         }).then(response => {
             if (response){
-                throw "Email already taken!"
+                throw new AppError("Email already taken!")
             }
         })
 

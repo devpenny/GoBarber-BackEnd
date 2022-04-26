@@ -1,14 +1,15 @@
 import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
-import Appointment from '../models/Appointment';
-import AppointmentRepository from '../repositories/AppointmentsRepository';
+import AppError from '../../shared/errors/AppError';
+import Appointment from './infra/typeorm/entities/Appointment';
+import AppointmentRepository from './repositories/AppointmentsRepository';
 
 interface RequestDTO {
     date: Date;
     provider_id: string;
 }
 
-class CreateAppointmentService {
+class   CreateAppointmentService {
     public async execute({ date, provider_id }: RequestDTO): Promise<Appointment> {
         const appointmentRepository = getCustomRepository(AppointmentRepository)
 
@@ -17,7 +18,7 @@ class CreateAppointmentService {
         await appointmentRepository.findByDate(appointmentDate)
             .then(response => {
                 if (response){
-                    throw "This appointment time is already taken"
+                    throw new AppError("This appointment time is already taken")
                 }
             })
 

@@ -1,8 +1,9 @@
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { getRepository } from "typeorm";
-import User from "../models/User";
-import authConfig from "../config/auth";
+import User from "../infra/typeorm/entities/User";
+import authConfig from "../../../config/auth";
+import AppError from "../../../shared/errors/AppError";
 
 interface RequestDTO {
     email: string;
@@ -21,12 +22,12 @@ class AuthenticateUserService {
         const user = await usersRepository.findOne({where: {email: email}});
 
         if (!user) {
-            throw "Invalid Email/Password combination."
+            throw new AppError("Invalid Email/Password combination.", 401)
         }
 
         await compare(password, user.password).then(response=>{
             if (!response){
-                throw "Invalid Email/Password combination."
+                throw new AppError("Invalid Email/Password combination.", 401)
             }
         })
 

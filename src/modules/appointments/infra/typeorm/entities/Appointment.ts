@@ -8,7 +8,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 
-import User from './User';
+import User from '../../../../users/infra/typeorm/entities/User';
 
 // Creates the structure of the appointment
 @Entity("appointments")
